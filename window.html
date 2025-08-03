@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bilingual Product Manager</title>
+  <style>
+    body {
+      background-color: #f3f4f6;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      transition: direction 0.3s;
+    }
+
+    .parent {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px;
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    input, button, small {
+      width: 100%;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #1e40af;
+    }
+
+    #create, #delete {
+      height: 40px;
+      font-size: 15px;
+    }
+
+    #searchByTitle, #searchByCategory {
+      height: 35px;
+    }
+
+    #total {
+      display: inline-block;
+      background-color: #fee2e2;
+      color: #991b1b;
+      padding: 8px;
+      font-weight: bold;
+      border-radius: 6px;
+    }
+
+    .div2 { grid-column: 1; grid-row: 2; }
+    .div3 { grid-column: 2; grid-row: 2; }
+    .div4 { grid-column: 3; grid-row: 2; }
+    .div5 { grid-column: 4; grid-row: 2; }
+    .div6 { grid-column: 5; grid-row: 2; text-align: left; }
+
+    .div7 { grid-column: 1 / span 5; grid-row: 1; }
+    .div8 { grid-column: 1 / span 5; grid-row: 3; }
+    .div9 { grid-column: 1 / span 5; grid-row: 4; }
+    .div10 { grid-column: 1 / span 5; grid-row: 5; }
+    .div11 { grid-column: 1 / span 5; grid-row: 6; }
+    .div14 { grid-column: 1 / span 2; grid-row: 7; }
+    .div15 { grid-column: 4 / span 2; grid-row: 7; }
+    .div16 { grid-column: 1 / span 5; grid-row: 8; }
+
+    #langToggle {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 8px 14px;
+      background-color: #10b981;
+      border: none;
+      color: white;
+      border-radius: 6px;
+      cursor: pointer;
+      min-width: 60px;
+    }
+
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+    }
+
+    th {
+      background-color: #e5e7eb;
+    }
+
+    .delete-btn {
+      background-color: #dc2626;
+      padding: 5px 10px;
+      color: white;
+      border: none;
+      border-radius: 4px;
+    }
+
+    #productCountBox {
+      margin-top: 20px;
+      background-color: #e0f2fe;
+      color: #0369a1;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 8px;
+      display: inline-block;
+    }
+
+    @media (max-width: 600px) {
+      .parent {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button id="langToggle">عربي</button>
+
+<div class="parent">
+  <div class="div7"><input type="text" id="title" placeholder="Product Title"></div>
+  <div class="div2"><input type="number" id="price" placeholder="Price"></div>
+  <div class="div3"><input type="number" id="tax" placeholder="Tax"></div>
+  <div class="div4"><input type="number" id="ads" placeholder="Ads"></div>
+  <div class="div5"><input type="number" id="discount" placeholder="Discount"></div>
+  <div class="div6"><small id="total">0</small></div>
+  <div class="div8"><input type="number" id="count" placeholder="Count"></div>
+  <div class="div9"><input type="text" id="category" placeholder="Category"></div>
+  <div class="div10"><button id="create">Create</button></div>
+  <div class="div11"><input type="text" id="search" placeholder="Search..."></div>
+  <div class="div14"><button id="searchByTitle">Search By Title</button></div>
+  <div class="div15"><button id="searchByCategory">Search By Category</button></div>
+  <div class="div16"><button id="delete">Delete All</button></div>
+</div>
+
+<div id="productCountBox">🗃️ Total Products: 0</div>
+
+<table id="dataTable">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Title</th>
+      <th>Price</th>
+      <th>Tax</th>
+      <th>Ads</th>
+      <th>Discount</th>
+      <th>Total</th>
+      <th>Category</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script>
+  const langBtn = document.getElementById("langToggle");
+  let isArabic = false;
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  let totalValue = 0;
+  let currentSearchMode = "title";
+
+  const placeholders = {
+    en: {
+      title: "Product Title", price: "Price", tax: "Tax", ads: "Ads", discount: "Discount",
+      count: "Count", category: "Category", search: "Search...", create: "Create",
+      delete: "Delete All", searchByTitle: "Search By Title", searchByCategory: "Search By Category",
+      totalPrefix: "Total: ", toggle: "عربي", found: "items found", totalBox: "🗃️ Total Products: "
+    },
+    ar: {
+      title: "اسم المنتج", price: "السعر", tax: "الضريبة", ads: "الإعلانات", discount: "الخصم",
+      count: "الكمية", category: "الفئة", search: "بحث...", create: "إنشاء",
+      delete: "حذف الكل", searchByTitle: "بحث بالعنوان", searchByCategory: "بحث بالفئة",
+      totalPrefix: "المجموع: ", toggle: "EN", found: "عنصر مطابق", totalBox: "🗃️ إجمالي العناصر: "
+    }
+  };
+
+  function updateTotalDisplay() {
+    const lang = isArabic ? "ar" : "en";
+    document.getElementById("total").textContent = placeholders[lang].totalPrefix + totalValue;
+  }
+
+  function updateProductCountBox(count = products.length) {
+    const lang = isArabic ? "ar" : "en";
+    document.getElementById("productCountBox").textContent = placeholders[lang].totalBox + count;
+  }
+
+  function calculateTotal(price, tax, ads, discount) {
+    return +price + +tax + +ads - +discount;
+  }
+
+  function clearForm() {
+    ["title", "price", "tax", "ads", "discount", "count", "category"].forEach(id => {
+      document.getElementById(id).value = "";
+    });
+    totalValue = 0;
+    updateTotalDisplay();
+  }
+
+  function renderTable(data = products) {
+    const tbody = document.querySelector("#dataTable tbody");
+    tbody.innerHTML = "";
+    data.forEach((p, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td>${p.title}</td>
+        <td>${p.price}</td>
+        <td>${p.tax}</td>
+        <td>${p.ads}</td>
+        <td>${p.discount}</td>
+        <td>${p.total}</td>
+        <td>${p.category}</td>
+        <td><button class="delete-btn" onclick="deleteProduct(${index})">X</button></td>
+      `;
+      tbody.appendChild(row);
+    });
+    updateProductCountBox(data.length);
+  }
+
+  function deleteProduct(index) {
+    products.splice(index, 1);
+    localStorage.setItem("products", JSON.stringify(products));
+    renderTable();
+  }
+
+  document.getElementById("create").onclick = () => {
+    const get = id => document.getElementById(id).value.trim();
+    const title = get("title"), price = get("price"), tax = get("tax"), ads = get("ads"), discount = get("discount"), count = +get("count") || 1, category = get("category");
+    if (!title || !price) return alert("Title and Price required");
+
+    const total = calculateTotal(price, tax, ads, discount);
+    for (let i = 0; i < count; i++) {
+      products.push({ title, price, tax, ads, discount, total, category });
+    }
+    localStorage.setItem("products", JSON.stringify(products));
+    clearForm();
+    renderTable();
+  };
+
+  document.getElementById("delete").onclick = () => {
+    if (confirm("Are you sure you want to delete all?")) {
+      products = [];
+      localStorage.removeItem("products");
+      renderTable();
+    }
+  };
+
+  ["price", "tax", "ads", "discount"].forEach(id => {
+    document.getElementById(id).addEventListener("input", () => {
+      const price = +document.getElementById("price").value || 0;
+      const tax = +document.getElementById("tax").value || 0;
+      const ads = +document.getElementById("ads").value || 0;
+      const discount = +document.getElementById("discount").value || 0;
+      totalValue = calculateTotal(price, tax, ads, discount);
+      updateTotalDisplay();
+    });
+  });
+
+  document.getElementById("searchByTitle").onclick = () => {
+    currentSearchMode = "title";
+    applySearch();
+  };
+
+  document.getElementById("searchByCategory").onclick = () => {
+    currentSearchMode = "category";
+    applySearch();
+  };
+
+  document.getElementById("search").addEventListener("input", applySearch);
+
+  function applySearch() {
+    const term = document.getElementById("search").value.toLowerCase();
+    const filtered = products.filter(p => p[currentSearchMode].toLowerCase().includes(term));
+    renderTable(filtered);
+  }
+
+  langBtn.addEventListener("click", () => {
+    isArabic = !isArabic;
+    const lang = isArabic ? "ar" : "en";
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+    ["title", "price", "tax", "ads", "discount", "count", "category", "search"].forEach(id => {
+      document.getElementById(id).placeholder = placeholders[lang][id];
+    });
+    ["create", "delete", "searchByTitle", "searchByCategory"].forEach(id => {
+      document.getElementById(id).textContent = placeholders[lang][id];
+    });
+    langBtn.textContent = placeholders[lang].toggle;
+    updateTotalDisplay();
+    updateProductCountBox();
+  });
+
+  // Initial render
+  renderTable();
+</script>
+
+</body>
+</html>

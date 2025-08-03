@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>مخزني | MyStore - Select Device</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600;700&family=Poppins:wght@500;700&display=swap');
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: linear-gradient(135deg, #0f172a, #1e40af);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      color: white;
+      text-align: center;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.3);
+      max-width: 360px;
+      width: 90%;
+      color: #0f172a;
+      transition: transform 0.3s ease;
+    }
+
+    .container:hover {
+      transform: translateY(-3px);
+    }
+
+    .logo {
+      font-family: 'Cairo', sans-serif;
+      font-size: 42px;
+      color: #10b981;
+      margin-bottom: 5px;
+    }
+
+    .logo-subtitle {
+      font-size: 18px;
+      font-weight: 600;
+      color: #2563eb;
+      margin-bottom: 30px;
+    }
+
+    h1 {
+      font-size: 20px;
+      margin-bottom: 25px;
+      line-height: 1.4;
+      color: #1e293b;
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      margin: 10px 0;
+      padding: 14px;
+      font-size: 15px;
+      font-weight: bold;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      transform: scale(1.05);
+    }
+
+    .mobile-btn {
+      background-color: #10b981;
+    }
+
+    .mobile-btn:hover {
+      background-color: #0f766e;
+    }
+
+    .desktop-btn {
+      background-color: #2563eb;
+    }
+
+    .desktop-btn:hover {
+      background-color: #1d4ed8;
+    }
+
+    .icon {
+      font-size: 18px;
+    }
+  </style>
+
+  <!-- Icons CDN -->
+  <script src="https://kit.fontawesome.com/a2e0e6f53f.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Device selection">
+    <div class="logo">مخزني</div>
+    <div class="logo-subtitle">MyStore</div>
+    <h1>اختر جهازك / Select your device</h1>
+
+    <button class="mobile-btn" onclick="location.href='mobile.html'" aria-label="Use mobile">
+      <i class="fas fa-mobile-alt icon"></i> أنا أستخدم هاتف / Mobile
+    </button>
+
+    <button class="desktop-btn" onclick="location.href='window.html'" aria-label="Use desktop">
+      <i class="fas fa-desktop icon"></i> أنا أستخدم جهاز مكتب / Desktop
+    </button>
+  </div>
+</body>
+</html>

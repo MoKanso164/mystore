@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mobile Product Manager</title>
+  <style>
+    body {
+      background-color: #f3f4f6;
+      font-family: Arial, sans-serif;
+      padding: 60px 10px 10px; /* leave space for fixed header */
+      transition: direction 0.3s;
+      color: #1e293b;
+      margin: 0;
+    }
+
+    /* Fixed header */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      font-size: 24px;
+      text-align: center;
+      padding: 15px 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      user-select: none;
+      z-index: 1100;
+      font-family: 'Arial Black', Arial, sans-serif;
+    }
+
+    .parent {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      background-color: #ffffff;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      max-width: 700px;
+      margin: 20px auto;
+    }
+
+    input, button, small {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+
+    button {
+      background-color: #2563eb;
+      color: white;
+      font-weight: bold;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #1d4ed8;
+    }
+
+    #total {
+      background-color: #fee2e2;
+      color: #991b1b;
+      padding: 8px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+      user-select: none;
+    }
+
+    #langToggle {
+      position: fixed;
+      top: 15%;
+      right: 0px;
+      background-color: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1000;
+      user-select: none;
+      transition: background-color 0.3s ease;
+      width: auto;
+    }
+
+    #langToggle:hover {
+      background-color: #059669;
+    }
+
+    #tableBox {
+      overflow-x: auto;
+      margin-top: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 8px;
+      margin-top: 10px;
+      font-size: 14px;
+      box-shadow: 0 2px 8px rgb(0 0 0 / 0.05);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    thead tr {
+      background-color: #2563eb;
+      color: white;
+      font-weight: 600;
+      text-align: center;
+      border-radius: 12px;
+    }
+
+    thead th {
+      padding: 12px 10px;
+      user-select: none;
+    }
+
+    tbody tr {
+      background: white;
+      box-shadow: 0 1px 4px rgb(0 0 0 / 0.1);
+      border-radius: 10px;
+      transition: background-color 0.2s ease;
+      cursor: default;
+    }
+
+    tbody tr:hover {
+      background-color: #e0e7ff;
+    }
+
+    tbody td {
+      padding: 10px 8px;
+      text-align: center;
+      vertical-align: middle;
+      border: none;
+    }
+
+    tbody td:last-child {
+      padding: 5px;
+    }
+
+    .delete-btn {
+      background-color: #ef4444;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      user-select: none;
+    }
+
+    .delete-btn:hover {
+      background-color: #dc2626;
+    }
+
+    #countBox {
+      text-align: center;
+      font-weight: 600;
+      font-size: 15px;
+      margin-top: 5px;
+      color: #475569;
+      user-select: none;
+    }
+
+    /* Responsive tweaks */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+
+      thead tr {
+        display: none;
+      }
+
+      tbody tr {
+        margin-bottom: 15px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      }
+
+      tbody td {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px;
+        border-bottom: 1px solid #ddd;
+        text-align: right;
+        font-size: 13px;
+      }
+
+      tbody td:last-child {
+        border-bottom: none;
+        justify-content: center;
+      }
+
+      tbody td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        flex-basis: 50%;
+        text-align: left;
+        color: #374151;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>مخزني | MyStore</header>
+
+<button id="langToggle">عربي</button>
+
+<div class="parent">
+  <input type="text" id="title" placeholder="Product Title" />
+  <input type="number" id="price" placeholder="Price" />
+  <input type="number" id="tax" placeholder="Tax" />
+  <input type="number" id="ads" placeholder="Ads" />
+  <input type="number" id="discount" placeholder="Discount" />
+  <small id="total">Total: 0</small>
+  <input type="number" id="count" placeholder="Count" />
+  <input type="text" id="category" placeholder="Category" />
+  <button id="create">Create</button>
+
+  <input type="text" id="search" placeholder="Search..." />
+  <button id="searchByTitle">Search By Title</button>
+  <button id="searchByCategory">Search By Category</button>
+</div>
+
+<div class="parent">
+  <div id="countBox"></div>
+  <button id="delete">Delete All</button>
+</div>
+
+<div class="parent" id="tableBox">
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Price</th>
+        <th>Tax</th>
+        <th>Ads</th>
+        <th>Discount</th>
+        <th>Total</th>
+        <th>Category</th>
+        <th>Delete</th>
+      </tr>
+    </thead>
+    <tbody id="tableBody"></tbody>
+  </table>
+</div>
+
+<script>
+  let isArabic = false;
+  const langBtn = document.getElementById("langToggle");
+  const placeholders = {
+    en: {
+      title: "Product Title", price: "Price", tax: "Tax", ads: "Ads", discount: "Discount",
+      count: "Count", category: "Category", search: "Search...", create: "Create",
+      delete: "Delete All", searchByTitle: "Search By Title", searchByCategory: "Search By Category",
+      totalPrefix: "Total: ", toggle: "عربي"
+    },
+    ar: {
+      title: "اسم المنتج", price: "السعر", tax: "الضريبة", ads: "الإعلانات", discount: "الخصم",
+      count: "الكمية", category: "الفئة", search: "بحث...", create: "إنشاء",
+      delete: "حذف الكل", searchByTitle: "بحث بالعنوان", searchByCategory: "بحث بالفئة",
+      totalPrefix: "المجموع: ", toggle: "EN"
+    }
+  };
+
+  langBtn.onclick = () => {
+    isArabic = !isArabic;
+    const lang = isArabic ? "ar" : "en";
+    document.documentElement.lang = lang;
+    document.documentElement.dir = isArabic ? "rtl" : "ltr";
+
+    const ids = ["title", "price", "tax", "ads", "discount", "count", "category", "search"];
+    ids.forEach(id => document.getElementById(id).placeholder = placeholders[lang][id]);
+
+    document.getElementById("create").textContent = placeholders[lang].create;
+    document.getElementById("delete").textContent = placeholders[lang].delete;
+    document.getElementById("searchByTitle").textContent = placeholders[lang].searchByTitle;
+    document.getElementById("searchByCategory").textContent = placeholders[lang].searchByCategory;
+    document.getElementById("total").textContent = placeholders[lang].totalPrefix + document.getElementById("total").textContent.replace(/^\D+/, "");
+
+    langBtn.textContent = placeholders[lang].toggle;
+    renderTable(); // re-render to update labels if needed
+  };
+
+  const inputs = ["title","price","tax","ads","discount","count","category"];
+  const totalDisplay = document.getElementById("total");
+  const tableBody = document.getElementById("tableBody");
+  const countBox = document.getElementById("countBox");
+  let products = JSON.parse(localStorage.getItem("products")) || [];
+  let currentSearchMode = "title";
+
+  function calcTotal() {
+    const price = +document.getElementById("price").value || 0;
+    const tax = +document.getElementById("tax").value || 0;
+    const ads = +document.getElementById("ads").value || 0;
+    const discount = +document.getElementById("discount").value || 0;
+    totalDisplay.textContent = (isArabic ? placeholders.ar.totalPrefix : placeholders.en.totalPrefix) + (price + tax + ads - discount);
+  }
+
+  ["price","tax","ads","discount"].forEach(id => {
+    document.getElementById(id).addEventListener("input", calcTotal);
+  });
+
+  document.getElementById("create").onclick = () => {
+    const values = {};
+    inputs.forEach(id => values[id] = document.getElementById(id).value.trim());
+    const count = parseInt(values.count) || 1;
+
+    if(!values.title || !values.category) {
+      alert(isArabic ? "الرجاء ملء العنوان والفئة" : "Please fill in title and category");
+      return;
+    }
+
+    for (let i = 0; i < count; i++) {
+      products.push({
+        ...values,
+        total: (+values.price || 0) + (+values.tax || 0) + (+values.ads || 0) - (+values.discount || 0)
+      });
+    }
+    localStorage.setItem("products", JSON.stringify(products));
+    clearInputs();
+    renderTable();
+  };
+
+  function clearInputs() {
+    inputs.forEach(id => document.getElementById(id).value = "");
+    calcTotal();
+  }
+
+  function renderTable(filtered = products) {
+    tableBody.innerHTML = "";
+    filtered.forEach((p, i) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td data-label="ID">${i + 1}</td>
+        <td data-label="${isArabic ? 'العنوان' : 'Title'}">${p.title}</td>
+        <td data-label="${isArabic ? 'السعر' : 'Price'}">${p.price}</td>
+        <td data-label="${isArabic ? 'الضريبة' : 'Tax'}">${p.tax}</td>
+        <td data-label="${isArabic ? 'الإعلانات' : 'Ads'}">${p.ads}</td>
+        <td data-label="${isArabic ? 'الخصم' : 'Discount'}">${p.discount}</td>
+        <td data-label="${isArabic ? 'المجموع' : 'Total'}">${p.total}</td>
+        <td data-label="${isArabic ? 'الفئة' : 'Category'}">${p.category}</td>
+        <td data-label="${isArabic ? 'حذف' : 'Delete'}">
+          <button class="delete-btn" onclick="deleteProduct(${i})">×</button>
+        </td>`;
+      tableBody.appendChild(row);
+    });
+    countBox.textContent = filtered.length
+      ? `${filtered.length} ${isArabic ? "عنصر" : "items"}`
+      : isArabic ? "لا يوجد عناصر" : "No items";
+  }
+
+  function deleteProduct(index) {
+    products.splice(index, 1);
+    localStorage.setItem("products", JSON.stringify(products));
+    renderTable();
+  }
+
+  document.getElementById("delete").onclick = () => {
+    if (confirm(isArabic ? "هل أنت متأكد من حذف الكل؟" : "Are you sure you want to delete all?")) {
+      products = [];
+      localStorage.removeItem("products");
+      renderTable();
+    }
+  };
+
+  document.getElementById("searchByTitle").onclick = () => {
+    currentSearchMode = "title";
+    applySearch();
+  };
+
+  document.getElementById("searchByCategory").onclick = () => {
+    currentSearchMode = "category";
+    applySearch();
+  };
+
+  document.getElementById("search").addEventListener("input", applySearch);
+
+  function applySearch() {
+    const term = document.getElementById("search").value.toLowerCase();
+    const filtered = products.filter(p => p[currentSearchMode]?.toLowerCase().includes(term));
+    renderTable(filtered);
+  }
+
+  // Initialize total and render table on load
+  calcTotal();
+  renderTable();
+</script>
+
+</body>
+</html>
